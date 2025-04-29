@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">WeCode Chat</string>
-    <string name="facebook_app_id">682205460854066</string>
-    <string name="fb_login_protocol_scheme">fb682205460854066</string>
-    <string name="facebook_client_token">bb364e39c5f8819b6cb050b8f50b5462</string>
+    <string name="app_name">WeChatForCode</string>
+    <string name="facebook_app_id"></string>
+    <string name="fb_login_protocol_scheme"></string>
+    <string name="facebook_client_token"></string>
 </resources>
