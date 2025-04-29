@@ -2,7 +2,7 @@
 
 Une application de messagerie moderne développée avec Flutter et Firebase.
 
-## 🚀 Fonctionnalités
+## Fonctionnalités
 
 - Authentification multiple (Email/Password, Google)
 - Messagerie en temps réel

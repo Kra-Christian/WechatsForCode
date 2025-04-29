@@ -1,4 +1,4 @@
-# wecode_by_chat
+# wecodeforchat
 
 A new Flutter project.
 
