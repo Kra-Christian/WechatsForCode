@@ -1,7 +1,7 @@
 buildscript {
     ext {
         kotlin_version = '2.1.0'
-        java_version = JavaVersion.VERSION_17  // Define a consistent Java version
+        java_version = JavaVersion.VERSION_17
     }
     repositories {
         google()
