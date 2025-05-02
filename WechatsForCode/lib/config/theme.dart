@@ -8,15 +8,18 @@ class AppTheme {
   static const Color backgroundColor = Color(0xFFF5F5F5);
   static const Color onBackgroundColor = Color(0xFF121212);
   
+  // Chat Colors
   static const Color sentMessageColor = Color(0xFF6C63FF);
   static const Color receivedMessageColor = Color(0xFFE0E0E0);
   static const Color sentMessageTextColor = Color(0xFFFFFFFF);
   static const Color receivedMessageTextColor = Color(0xFF121212);
   
+  // Animation Durations
   static const Duration shortAnimationDuration = Duration(milliseconds: 200);
   static const Duration mediumAnimationDuration = Duration(milliseconds: 400);
   static const Duration longAnimationDuration = Duration(milliseconds: 600);
 
+  // Theme Data
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
     colorScheme: ColorScheme.light(
@@ -96,6 +99,7 @@ class AppTheme {
     fontFamily: 'Poppins',
   );
 
+  // Text Styles
   static const TextStyle headingStyle = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.bold,

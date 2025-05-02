@@ -78,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
   Future<void> _signInWithMethod(
       Future<void> Function() signInMethod,
-      {String errorPrefix = 'Failed to sign in'}
+      {String errorPrefix = 'Échec de connexion'}
       ) async {
     if (_isLoading) return;
 
@@ -129,8 +129,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   }
 
   Future<void> _login() => _signInWithMethod(_emailPasswordSignIn);
-  Future<void> _loginWithGoogle() => _signInWithMethod(_googleSignIn, errorPrefix: 'Failed to sign in with Google');
-  Future<void> _loginWithFacebook() => _signInWithMethod(_facebookSignIn, errorPrefix: 'Failed to sign in with Facebook');
+  Future<void> _loginWithGoogle() => _signInWithMethod(_googleSignIn, errorPrefix: 'Échec de connexion avec Google');
+  Future<void> _loginWithFacebook() => _signInWithMethod(_facebookSignIn, errorPrefix: 'Échec de connexion avec Facebook');
 
   void _navigateToSignUp() {
     Navigator.of(context).push(
@@ -213,7 +213,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   SlideEffect(begin: const Offset(0, 0.2), end: const Offset(0, 0), delay: 300.ms, duration: 600.ms),
                 ],
                 child: Text(
-                  'Welcome Back!',
+                  'Bon Retour !',
                   style: AppTheme.headingStyle.copyWith(color: AppTheme.primaryColor),
                   textAlign: TextAlign.center,
                 ),
@@ -227,7 +227,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   FadeEffect(delay: 400.ms, duration: 600.ms),
                 ],
                 child: Text(
-                  'Sign in to continue',
+                  'Connectez-vous pour continuer',
                   style: AppTheme.captionStyle.copyWith(color: Colors.grey.shade600),
                   textAlign: TextAlign.center,
                 ),
@@ -267,15 +267,15 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                     children: [
                       CustomTextField(
                         controller: _emailController,
-                        hint: 'Email Address',
+                        hint: 'Adresse Email',
                         prefixIcon: Icons.email_outlined,
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
+                            return 'Veuillez saisir votre email';
                           }
                           if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                            return 'Please enter a valid email address';
+                            return 'Veuillez saisir une adresse email valide';
                           }
                           return null;
                         },
@@ -286,7 +286,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
                       CustomTextField(
                         controller: _passwordController,
-                        hint: 'Password',
+                        hint: 'Mot de passe',
                         prefixIcon: Icons.lock_outline,
                         obscureText: _obscurePassword,
                         suffixIcon: _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
@@ -297,7 +297,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                         },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
+                            return 'Veuillez saisir votre mot de passe';
                           }
                           return null;
                         },
@@ -311,7 +311,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                         child: TextButton(
                           onPressed: _navigateToResetPassword,
                           child: Text(
-                            'Forgot Password?',
+                            'Mot de passe oublié ?',
                             style: TextStyle(
                               color: AppTheme.primaryColor,
                               fontWeight: FontWeight.w500,
@@ -325,7 +325,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                       Hero(
                         tag: 'login_button',
                         child: CustomButton(
-                          text: 'Login',
+                          text: 'Connexion',
                           onPressed: _login,
                           type: ButtonType.primary,
                           icon: Icons.login,
@@ -343,7 +343,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: Text(
-                              'Or continue with',
+                              'Ou continuer avec',
                               style: TextStyle(color: Colors.grey.shade600),
                             ),
                           ),
@@ -404,13 +404,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Don\'t have an account? ',
+                            'Vous n\'avez pas de compte ? ',
                             style: TextStyle(color: Colors.grey.shade600),
                           ),
                           GestureDetector(
                             onTap: _navigateToSignUp,
                             child: Text(
-                              'Sign Up',
+                              'S\'inscrire',
                               style: TextStyle(
                                 color: AppTheme.primaryColor,
                                 fontWeight: FontWeight.bold,

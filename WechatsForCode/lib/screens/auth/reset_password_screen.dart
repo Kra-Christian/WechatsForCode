@@ -48,7 +48,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       });
     } catch (e) {
       setState(() {
-        _errorMessage = 'Failed to send reset email: ${e.toString()}';
+        _errorMessage = 'Échec de l\'envoi de l\'email de réinitialisation: ${e.toString()}';
       });
     } finally {
       if (mounted) {
@@ -81,9 +81,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Reset Password Text
         Text(
-          'Reset Password',
+          'Réinitialiser le mot de passe',
           style: AppTheme.headingStyle.copyWith(color: AppTheme.primaryColor),
           textAlign: TextAlign.center,
         ).animate()
@@ -93,7 +92,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         const SizedBox(height: 10),
         
         Text(
-          'Enter your email address and we\'ll send you a link to reset your password',
+          'Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe',
           style: AppTheme.captionStyle.copyWith(color: Colors.grey.shade600),
           textAlign: TextAlign.center,
         ).animate()
@@ -101,7 +100,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         
         const SizedBox(height: 30),
         
-        // Error Message
         if (_errorMessage != null)
           Container(
             padding: const EdgeInsets.all(16),
@@ -119,35 +117,32 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         
         if (_errorMessage != null) const SizedBox(height: 20),
         
-        // Reset Form
         Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Email Field
               CustomTextField(
                 controller: _emailController,
-                hint: 'Email Address',
+                hint: 'Adresse email',
                 prefixIcon: Icons.email_outlined,
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
+                    return 'Veuillez saisir votre email';
                   }
                   if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                    return 'Please enter a valid email address';
+                    return 'Veuillez saisir une adresse email valide';
                   }
                   return null;
                 },
-                label: 'champs disponible',
+                label: 'Champs disponible',
               ).animate().fadeIn(delay: 200.ms, duration: 500.ms),
               
               const SizedBox(height: 32),
               
-              // Reset Button
               CustomButton(
-                text: 'Send Reset Link',
+                text: 'Envoyer le lien de réinitialisation',
                 onPressed: _resetPassword,
                 type: ButtonType.primary,
                 icon: Icons.send_outlined,
@@ -156,18 +151,17 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               
               const SizedBox(height: 24),
               
-              // Back to Login
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Remember your password? ',
+                    'le mot de passe est revenue ? ',
                     style: TextStyle(color: Colors.grey.shade600),
                   ),
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
                     child: Text(
-                      'Login',
+                      'Connexion',
                       style: TextStyle(
                         color: AppTheme.primaryColor,
                         fontWeight: FontWeight.bold,
@@ -199,7 +193,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         const SizedBox(height: 24),
         
         Text(
-          'Reset Link Sent',
+          'Lien de réinitialisation envoyé',
           style: AppTheme.headingStyle.copyWith(color: AppTheme.primaryColor),
           textAlign: TextAlign.center,
         ).animate()
@@ -208,7 +202,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         const SizedBox(height: 16),
         
         Text(
-          'We\'ve sent a password reset link to ${_emailController.text}. Please check your email inbox.',
+          'Nous avons envoyé un lien de réinitialisation de mot de passe à ${_emailController.text}. Veuillez vérifier votre boîte de réception.',
           style: AppTheme.bodyStyle.copyWith(color: Colors.grey.shade600),
           textAlign: TextAlign.center,
         ).animate()
@@ -217,7 +211,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         const SizedBox(height: 40),
         
         CustomButton(
-          text: 'Back to Login',
+          text: 'Retour à la connexion',
           onPressed: () => Navigator.pop(context),
           type: ButtonType.outline,
           icon: Icons.arrow_back,

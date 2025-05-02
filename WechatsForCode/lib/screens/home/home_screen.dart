@@ -1,12 +1,15 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../services/auth_service.dart';
 import '../../services/database_service.dart';
+import '../../services/call_service.dart';
 import '../../config/theme.dart';
 import '../../models/user_model.dart';
 import '../chat/chat_list_screen.dart';
+import '../chat/incoming_call_screen.dart';
 import '../profile/profile_screen.dart';
 import '../../widgets/loading_indicator.dart';
 
@@ -25,6 +28,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final _pageController = PageController();
   late AnimationController _fadeController;
   late AnimationController _slideController;
+  
+  StreamSubscription? _callSubscription;
 
   @override
   void initState() {
@@ -52,6 +57,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     _pageController.dispose();
     _fadeController.dispose();
     _slideController.dispose();
+    
+    _callSubscription?.cancel();
+    
     _updateUserStatusOffline();
     super.dispose();
   }
@@ -72,6 +80,41 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
   }
 
+  void _setupCallListener(String userId) {
+  _callSubscription?.cancel();
+  
+  _callSubscription = CallService().getIncomingCallsStream(userId).listen((snapshot) {
+    if (snapshot.docs.isNotEmpty && mounted) {
+      final callDoc = snapshot.docs.first;
+      final data = callDoc.data() as Map<String, dynamic>;
+      
+      if (data['status'] == 'pending') {
+        final String callId = data['callId'] ?? '';
+        final String callerId = data['callerId'] ?? '';
+        final String callerName = data['callerName'] ?? 'Appelant inconnu';
+        final String callerPhoto = data['callerPhoto'] ?? '';
+        final bool isVideoCall = data['isVideoCall'] ?? false;
+        
+        if (ModalRoute.of(context)?.settings.name != '/incoming_call') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              settings: const RouteSettings(name: '/incoming_call'),
+              builder: (context) => IncomingCallScreen(
+                callId: callId,
+                callerId: callerId,
+                callerName: callerName,
+                callerPhoto: callerPhoto,
+                currentUserId: userId,
+                isVideoCall: isVideoCall,
+              ),
+            ),
+          );
+        }
+      }
+    }
+  });
+}
   Future<void> _loadUserData() async {
     try {
       final authService = Provider.of<AuthService>(context, listen: false);
@@ -91,6 +134,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             _updateScreens();
             _isLoading = false;
           });
+
+          _setupCallListener(userId);
 
           _fadeController.forward();
           _slideController.forward();

@@ -71,7 +71,7 @@ class _SignupScreenState extends State<SignupScreen> {
       );
     } catch (e) {
       setState(() {
-        _errorMessage = 'Failed to create account: ${e.toString()}';
+        _errorMessage = 'Échec de création du compte: ${e.toString()}';
       });
     } finally {
       if (mounted) {
@@ -86,7 +86,7 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const Scaffold(
-        body: LoadingIndicator(message: 'Creating your account...'),
+        body: LoadingIndicator(message: 'Création de votre compte...'),
       );
     }
 
@@ -109,7 +109,7 @@ class _SignupScreenState extends State<SignupScreen> {
               const SizedBox(height: 20),
               
               Text(
-                'Create Account',
+                'Créer un Compte',
                 style: AppTheme.headingStyle.copyWith(color: AppTheme.primaryColor),
                 textAlign: TextAlign.center,
               ).animate()
@@ -119,7 +119,7 @@ class _SignupScreenState extends State<SignupScreen> {
               const SizedBox(height: 10),
               
               Text(
-                'Sign up to get started',
+                'Inscrivez-vous pour commencer',
                 style: AppTheme.captionStyle.copyWith(color: Colors.grey.shade600),
                 textAlign: TextAlign.center,
               ).animate()
@@ -151,39 +151,41 @@ class _SignupScreenState extends State<SignupScreen> {
                   children: [
                     CustomTextField(
                       controller: _nameController,
-                      hint: 'Full Name',
+                      hint: 'Nom Complet',
                       prefixIcon: Icons.person_outline,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your name';
+                          return 'Veuillez saisir votre nom';
                         }
                         return null;
-                      }, label: 'veuillez entrer votre nom',
+                      }, 
+                      label: 'Veuillez entrer votre nom',
                     ).animate().fadeIn(delay: 500.ms, duration: 500.ms),
                     
                     const SizedBox(height: 16),
                     
                     CustomTextField(
                       controller: _emailController,
-                      hint: 'Email Address',
+                      hint: 'Adresse Email',
                       prefixIcon: Icons.email_outlined,
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your email';
+                          return 'Veuillez saisir votre email';
                         }
                         if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                          return 'Please enter a valid email address';
+                          return 'Veuillez saisir une adresse email valide';
                         }
                         return null;
-                      }, label: 'veuillez entrer votre email',
+                      }, 
+                      label: 'Veuillez entrer votre email',
                     ).animate().fadeIn(delay: 600.ms, duration: 500.ms),
                     
                     const SizedBox(height: 16),
                     
                     CustomTextField(
                       controller: _passwordController,
-                      hint: 'Password',
+                      hint: 'Mot de passe',
                       prefixIcon: Icons.lock_outline,
                       obscureText: _obscurePassword,
                       suffixIcon: _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
@@ -194,20 +196,21 @@ class _SignupScreenState extends State<SignupScreen> {
                       },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter a password';
+                          return 'Veuillez saisir un mot de passe';
                         }
                         if (value.length < 6) {
-                          return 'Password must be at least 6 characters long';
+                          return 'Le mot de passe doit contenir au moins 6 caractères';
                         }
                         return null;
-                      }, label: 'veuillez entrer votre mot de passe',
+                      }, 
+                      label: 'Veuillez entrer votre mot de passe',
                     ).animate().fadeIn(delay: 700.ms, duration: 500.ms),
                     
                     const SizedBox(height: 16),
                     
                     CustomTextField(
                       controller: _confirmPasswordController,
-                      hint: 'Confirm Password',
+                      hint: 'Confirmer le Mot de passe',
                       prefixIcon: Icons.lock_outline,
                       obscureText: _obscureConfirmPassword,
                       suffixIcon: _obscureConfirmPassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
@@ -218,19 +221,20 @@ class _SignupScreenState extends State<SignupScreen> {
                       },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please confirm your password';
+                          return 'Veuillez confirmer votre mot de passe';
                         }
                         if (value != _passwordController.text) {
-                          return 'Passwords do not match';
+                          return 'Les mots de passe ne correspondent pas';
                         }
                         return null;
-                      }, label: 'veuillez confirmer votre mot de passe',
+                      }, 
+                      label: 'Veuillez confirmer votre mot de passe',
                     ).animate().fadeIn(delay: 800.ms, duration: 500.ms),
                     
                     const SizedBox(height: 32),
                     
                     CustomButton(
-                      text: 'Sign Up',
+                      text: 'S\'inscrire',
                       onPressed: _signUp,
                       type: ButtonType.primary,
                       icon: Icons.person_add,
@@ -243,13 +247,13 @@ class _SignupScreenState extends State<SignupScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Already have an account? ',
+                          'Vous avez déjà un compte ? ',
                           style: TextStyle(color: Colors.grey.shade600),
                         ),
                         GestureDetector(
                           onTap: () => Navigator.of(context).pop(),
                           child: Text(
-                            'Login',
+                            'Se connecter',
                             style: TextStyle(
                               color: AppTheme.primaryColor,
                               fontWeight: FontWeight.bold,

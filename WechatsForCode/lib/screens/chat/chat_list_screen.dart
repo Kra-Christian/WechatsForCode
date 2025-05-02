@@ -206,6 +206,8 @@ class _ChatListScreenState extends State<ChatListScreen> with WidgetsBindingObse
         user.uid,
       );
 
+      _updateUnreadMessagesLocally(chatId, currentUserId);
+
       if (mounted) {
         Navigator.push(
           context,
@@ -215,7 +217,9 @@ class _ChatListScreenState extends State<ChatListScreen> with WidgetsBindingObse
               receiverUser: user,
             ),
           ),
-        );
+        ).then((_) {
+          _setupChatListener();
+        });
       }
     } catch (e) {
       if (mounted) {
@@ -223,6 +227,40 @@ class _ChatListScreenState extends State<ChatListScreen> with WidgetsBindingObse
           SnackBar(content: Text('Erreur: $e')),
         );
       }
+    }
+  }
+
+  void _updateUnreadMessagesLocally(String chatId, String currentUserId) {
+    if (mounted) {
+      setState(() {
+        for (int i = 0; i < _chats.length; i++) {
+          if (_chats[i].id == chatId) {
+            final updatedChat = _chats[i];
+            final updatedMessage = updatedChat.lastMessage;
+            
+            if (updatedMessage.senderId != currentUserId) {
+              final newChat = ChatModel(
+                id: updatedChat.id,
+                participants: updatedChat.participants,
+                lastMessage: MessageModel(
+                  id: updatedMessage.id,
+                  senderId: updatedMessage.senderId,
+                  receiverId: currentUserId,
+                  content: updatedMessage.content,
+                  timestamp: updatedMessage.timestamp,
+                  isRead: true,
+                  type: updatedMessage.type,
+                ),
+                createdAt: updatedChat.createdAt,
+                updatedAt: DateTime.now(),
+              );
+              
+              _chats[i] = newChat;
+            }
+            break;
+          }
+        }
+      });
     }
   }
 
@@ -647,15 +685,7 @@ class _ChatListScreenState extends State<ChatListScreen> with WidgetsBindingObse
             ],
           ),
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ChatScreen(
-                  chatId: chat.id,
-                  receiverUser: otherUser,
-                ),
-              ),
-            );
+            _navigateToChat(otherUser);
           },
         ).animate().fadeIn(duration: 200.ms).slideX(
               begin: 0.05,

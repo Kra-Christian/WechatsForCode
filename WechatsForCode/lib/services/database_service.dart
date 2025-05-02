@@ -86,6 +86,51 @@ class DatabaseService {
       rethrow;
     }
   }
+
+
+Future<void> markMessagesAsRead(String chatId, String currentUserId) async {
+  try {
+    final messagesRef = _firestore.collection('messages')
+      .where('chatId', isEqualTo: chatId)
+      .where('senderId', isNotEqualTo: currentUserId)
+      .where('isRead', isEqualTo: false);
+    
+    final messagesSnapshot = await messagesRef.get();
+    
+    final batch = _firestore.batch();
+    
+    for (var doc in messagesSnapshot.docs) {
+      batch.update(doc.reference, {'isRead': true});
+    }
+    
+    await batch.commit();
+    
+    final chatRef = _firestore.collection('chats').doc(chatId);
+    final chatDoc = await chatRef.get();
+    
+    if (chatDoc.exists) {
+      final chatData = chatDoc.data() as Map<String, dynamic>;
+      final lastMessageId = chatData['lastMessageId'];
+      
+      if (lastMessageId != null) {
+        final lastMessageRef = _firestore.collection('messages').doc(lastMessageId);
+        final lastMessageDoc = await lastMessageRef.get();
+        
+        if (lastMessageDoc.exists) {
+          final lastMessageData = lastMessageDoc.data() as Map<String, dynamic>;
+          
+          if (lastMessageData['senderId'] != currentUserId && 
+              lastMessageData['isRead'] == false) {
+            await lastMessageRef.update({'isRead': true});
+          }
+        }
+      }
+    }
+  } catch (e) {
+    print('Erreur lors du marquage des messages comme lus: $e');
+    throw e;
+  }
+}
   
   Future<void> createRequiredIndexes() async {
     try {

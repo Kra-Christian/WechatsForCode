@@ -26,6 +26,8 @@ import '../profile/profile_screen.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'video_call_screen.dart';
+
 class ChatScreen extends StatefulWidget {
   final String chatId;
   final UserModel receiverUser;
@@ -1007,56 +1009,42 @@ void _setupMessagesListener() {
   }
 
   Future<void> _handleCall() async {
-    if (!await Permission.microphone.request().isGranted ||
-        !await Permission.camera.request().isGranted) {
-      _handleError('Permissions microphone et caméra requises');
-      return;
-    }
-    if (_isUserBlocked) {
-      _handleError('Utilisateur bloqué, appel impossible');
-      return;
-    }
-
-    final auth = Provider.of<AuthService>(context, listen: false);
-    final me = auth.currentUser!;
-    if (me.uid == widget.receiverUser.uid) {
-      _handleError('Vous ne pouvez pas vous appeler vous-même');
-      return;
-    }
-
-    final callId = '${widget.chatId}_${DateTime.now().millisecondsSinceEpoch}';
-
-    _engine = createAgoraRtcEngine();
-    await _engine.initialize(RtcEngineContext(
-      appId: 'a1cf0c0d00c244b99997769e9c730540',
-      channelProfile: ChannelProfileType.channelProfileCommunication,
-    ));
-    _engine.registerEventHandler(RtcEngineEventHandler(
-      onUserJoined: (_, remoteUid, __) => setState(() => _remoteUid = remoteUid),
-      onUserOffline: (_, remoteUid, __) => setState(() => _remoteUid = null),
-    ));
-    await _engine.enableVideo();
-    await _engine.enableAudio();
-    await _engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
-
-    await _databaseService.createCall(
-      callId: callId,
-      callerId: me.uid,
-      receiverId: widget.receiverUser.uid,
-      callerName: me.displayName ?? '',
-      callerPhoto: me.photoURL ?? '',
-      isVideoCall: true,
-    );
-
-    await _engine.joinChannel(
-      token: '007eJxTYFD67Zu8Z/pOh3X+n013LVc8wOP/QS+Jm+OSg1PRXVXu/zoKDImGyWkGyQYpBgbJRiYmSZZAYG5uZplqmWxubGBqYlBSwJXREMjIcI2tmpGRAQJBfH6GlMzi5NKSzPy8osSCzJRUBgYANqghjw==',
-      channelId: callId,
-      uid: me.uid.hashCode,
-      options: const ChannelMediaOptions(),
-    );
-
-    setState(() => _inCall = true);
+  if (!await Permission.microphone.request().isGranted ||
+      !await Permission.camera.request().isGranted) {
+    _handleError('Permissions microphone et caméra requises');
+    return;
   }
+  
+  if (_isUserBlocked) {
+    _handleError('Utilisateur bloqué, appel impossible');
+    return;
+  }
+
+  final auth = Provider.of<AuthService>(context, listen: false);
+  final me = auth.currentUser!;
+  
+  if (me.uid == widget.receiverUser.uid) {
+    _handleError('Vous ne pouvez pas vous appeler vous-même');
+    return;
+  }
+
+  final callId = '${widget.chatId}_${DateTime.now().millisecondsSinceEpoch}';
+
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => VideoCallScreen(
+        callId: callId,
+        userId: me.uid,
+        otherUserId: widget.receiverUser.uid,
+        otherUserName: widget.receiverUser.displayName,
+        otherUserPhoto: widget.receiverUser.photoUrl,
+        isIncoming: false,
+        isVideoCall: true,
+      ),
+    ),
+  );
+}
 
   Future<void> _endCall() async {
     await _engine.leaveChannel();
